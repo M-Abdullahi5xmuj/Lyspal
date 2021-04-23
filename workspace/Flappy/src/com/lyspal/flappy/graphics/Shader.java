@@ -20,11 +20,22 @@ public class Shader {
 	public static final int VERTEX_ATTRIB = 0;
 	public static final int TCOORD_ATTRIB = 1;
 	
+	// Shaders
+	
+	public static Shader BG;
+	
 	private final int ID;
 	private Map<String, Integer> locationCache = new HashMap<String, Integer>();
 	
 	public Shader(String vertex, String fragment) {
 		ID = ShaderUtils.load(vertex, fragment);
+	}
+	
+	/**
+	 * Load every shaders for the game.
+	 */
+	public static void loadAll() {
+		BG = new Shader("shaders/bg.vert", "shaders/bg.frag");
 	}
 	
 	// Uniform variables provides data to the GPU from the CPU.
@@ -110,7 +121,7 @@ public class Shader {
 		glUseProgram(ID);
 	}
 	
-	public void diable() {
+	public void disable() {
 		glUseProgram(0);
 	}
 	

@@ -7,7 +7,9 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 import org.lwjgl.glfw.GLFWVidMode;
 
+import com.lyspal.flappy.graphics.Shader;
 import com.lyspal.flappy.input.Input;
+import com.lyspal.flappy.math.Matrix4f;
 
 public class Main implements Runnable {		// Runnable = class that has a runnable method.
 	
@@ -105,6 +107,14 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
 		System.out.println("OpenGL: " + glGetString(GL_VERSION));
+		Shader.loadAll();
+		
+		// Create the orthographic matrix.
+		
+		Matrix4f pr_matrix = Matrix4f.orthographic(-10.0f, 10.0f, -10.0f * 9.0f / 16.0f,
+													10.0f * 9.0f / 16.0f, -1.0f, 1.0f);
+		Shader.BG.setUniformMat4f("pr_matrix", pr_matrix);
+		
 	} 
 	
 	/**
@@ -142,5 +152,4 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 		Main main = new Main();
 		main.run();
 	}
-
 }
