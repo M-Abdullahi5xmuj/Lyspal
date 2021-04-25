@@ -10,16 +10,18 @@ import org.lwjgl.glfw.GLFWVidMode;
 import com.lyspal.flappy.graphics.Shader;
 import com.lyspal.flappy.input.Input;
 import com.lyspal.flappy.math.Matrix4f;
+import com.lyspal.flappy.level.Level;
 
 public class Main implements Runnable {		// Runnable = class that has a runnable method.
 	
 	private int width = 1280;			// window width.
 	private int height = 720;			// window height.
 	
+	private boolean running = true;		// game running.
+	
 	private long window;				// window identifier.
 	
-	private boolean running = true;		// game running.
-
+	private Level level;
 
 	/*
 	 * =============== ABOUT IMPLEMENTATION FOR DIFFERENT OSes ===============
@@ -109,11 +111,16 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 		System.out.println("OpenGL: " + glGetString(GL_VERSION));
 		Shader.loadAll();
 		
-		// Create the orthographic matrix.
+		// Show the background.
 		
-		Matrix4f pr_matrix = Matrix4f.orthographic(-10.0f, 10.0f, -10.0f * 9.0f / 16.0f,
-													10.0f * 9.0f / 16.0f, -1.0f, 1.0f);
+		Shader.BG.enable();
+		Matrix4f pr_matrix = Matrix4f.orthographic(-10.0f, 10.0f, -10.0f * 9.0f / 16.0f, 10.0f * 9.0f / 16.0f, -1.0f, 1.0f);
 		Shader.BG.setUniformMat4f("pr_matrix", pr_matrix);
+		Shader.BG.disable();
+		
+		// Create a new level.
+		
+		level = new Level();
 		
 	} 
 	
@@ -144,6 +151,7 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 	 */
 	private void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		level.render();
 		glfwSwapBuffers(window);
 	}
 	

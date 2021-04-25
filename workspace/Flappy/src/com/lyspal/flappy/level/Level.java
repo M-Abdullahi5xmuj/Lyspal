@@ -9,7 +9,7 @@ import com.lyspal.flappy.graphics.VertexArray;
  * @author sylvainlaporte
  *
  */
-class Level {
+public class Level {
 
 	private VertexArray background;
 	
@@ -18,10 +18,10 @@ class Level {
 		// Create vertices.
 		
 		float[] vertices = new float[] {
-			-10.0f, -10.0f * 9.0f /16,0f, 0.0f,		// (0) bottom-left corner
-			-10.0f,  10.0f * 9.0f /16,0f, 0.0f,		// (1) top-left corner
-			  0.0f,  10.0f * 9.0f /16,0f, 0.0f,		// (2) top-right corner
-			  0.0f, -10.0f * 9.0f /16,0f, 0.0f		// (3) bottom-right corner
+			-10.0f, -10.0f * 9.0f / 16.0f, 0.0f,		// (0) bottom-left corner
+			-10.0f,  10.0f * 9.0f / 16.0f, 0.0f,		// (1) top-left corner
+			  0.0f,  10.0f * 9.0f / 16.0f, 0.0f,		// (2) top-right corner
+			  0.0f, -10.0f * 9.0f / 16.0f, 0.0f		// (3) bottom-right corner
 		};
 		
 		// Create triangle indices.

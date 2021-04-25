@@ -7,7 +7,6 @@ import com.lyspal.flappy.utils.BufferUtils;
 public class Matrix4f {
 
 	public static final int SIZE = 4 * 4;
-	
 	public float[] elements = new float[SIZE];
 	
 	/**
