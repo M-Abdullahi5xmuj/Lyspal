@@ -21,8 +21,9 @@ public class Shader {
 	public static final int TCOORD_ATTRIB = 1;
 	
 	// Shaders
-	
 	public static Shader BG;
+	
+	private boolean enabled = false;
 	
 	private final int ID;
 	private Map<String, Integer> locationCache = new HashMap<String, Integer>();
@@ -75,6 +76,7 @@ public class Shader {
 	 * @param value		value to put in the uniform variable
 	 */
 	public void setUniform1i(String name, int value) {
+		if (!enabled) enable();
 		glUniform1i(getUniform(name), value);
 	}
 	
@@ -85,6 +87,7 @@ public class Shader {
 	 * @param value		value to put in the uniform variable
 	 */
 	public void setUniform1f(String name, float value) {
+		if (!enabled) enable();
 		glUniform1f(getUniform(name), value);
 	}
 	
@@ -96,6 +99,7 @@ public class Shader {
 	 * @param y			value of the second float
 	 */
 	public void setUniform2f(String name, float x, float y) {
+		if (!enabled) enable();
 		glUniform2f(getUniform(name), x, y);
 	}
 	
@@ -107,10 +111,12 @@ public class Shader {
 	 * @param y			value of the second float
 	 */
 	public void setUniform3f(String name, Vector3f vector) {
+		if (!enabled) enable();
 		glUniform3f(getUniform(name), vector.x, vector.y, vector.z);
 	}
 	
 	public void setUniformMat4f(String name, Matrix4f matrix) {
+		if (!enabled) enable();
 		glUniformMatrix4fv(getUniform(name), false, matrix.toFloatBuffer());
 			// transpose = false because the matrices are column major.
 	}
@@ -119,10 +125,12 @@ public class Shader {
 	
 	public void enable() {
 		glUseProgram(ID);
+		enabled = true;
 	}
 	
 	public void disable() {
 		glUseProgram(0);
+		enabled = false;
 	}
 	
 }

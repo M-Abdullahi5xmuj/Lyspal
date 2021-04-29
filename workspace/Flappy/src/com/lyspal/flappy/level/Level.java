@@ -1,6 +1,7 @@
 package com.lyspal.flappy.level;
 
 import com.lyspal.flappy.graphics.Shader;
+import com.lyspal.flappy.graphics.Texture;
 import com.lyspal.flappy.graphics.VertexArray;
 
 /**
@@ -12,8 +13,13 @@ import com.lyspal.flappy.graphics.VertexArray;
 public class Level {
 
 	private VertexArray background;
+	private Texture bgTexture;
 	
 	public Level() {
+		
+		/*
+		 * Background
+		 */
 		
 		// Create vertices.
 		
@@ -43,15 +49,16 @@ public class Level {
 		};
 		
 		background = new VertexArray(vertices, indices, tcs);
+		bgTexture = new Texture("res/bg.jpeg");
 	}
 	
 	public void render() {
 		
-		// Test rendering without a texture.
-		
+		bgTexture.bind();
 		Shader.BG.enable();
 		background.render();
 		Shader.BG.disable();
+		bgTexture.unbind();
 	}
 	
 }

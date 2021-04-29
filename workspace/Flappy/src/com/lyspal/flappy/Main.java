@@ -3,14 +3,15 @@ package com.lyspal.flappy;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 import org.lwjgl.glfw.GLFWVidMode;
 
 import com.lyspal.flappy.graphics.Shader;
 import com.lyspal.flappy.input.Input;
-import com.lyspal.flappy.math.Matrix4f;
 import com.lyspal.flappy.level.Level;
+import com.lyspal.flappy.math.Matrix4f;
 
 public class Main implements Runnable {		// Runnable = class that has a runnable method.
 	
@@ -71,7 +72,6 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 	 */
 	private void init() {
 		if ( !glfwInit() ) {
-			// TODO: handle it
 			throw new IllegalStateException("Unable to initialize GLFW");
 		}
 		
@@ -101,22 +101,21 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 		
 		glfwMakeContextCurrent(window);
 		glfwShowWindow(window);
-		
 		createCapabilities();
 		
 		// Set clear color, enable depth test and print OpenGL version to console.
 		
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
+		glActiveTexture(GL_TEXTURE1);
 		System.out.println("OpenGL: " + glGetString(GL_VERSION));
 		Shader.loadAll();
 		
 		// Show the background.
 		
-		Shader.BG.enable();
 		Matrix4f pr_matrix = Matrix4f.orthographic(-10.0f, 10.0f, -10.0f * 9.0f / 16.0f, 10.0f * 9.0f / 16.0f, -1.0f, 1.0f);
 		Shader.BG.setUniformMat4f("pr_matrix", pr_matrix);
-		Shader.BG.disable();
+		Shader.BG.setUniform1i("tex", 1);
 		
 		// Create a new level.
 		
@@ -129,6 +128,7 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 	 */
 	public void run() {
 		init();				// init() OpenGl and render() have to be on the same thread.
+		
 		while (running) {
 			update();
 			render();
@@ -152,6 +152,13 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 	private void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		level.render();
+		
+		// OpenGL error checking
+		int error = glGetError();
+		if (error != GL_NO_ERROR) {
+			System.out.println(error);
+		}
+		
 		glfwSwapBuffers(window);
 	}
 	
