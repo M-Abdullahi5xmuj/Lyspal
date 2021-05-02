@@ -3,6 +3,8 @@ package com.lyspal.flappy.level;
 import com.lyspal.flappy.graphics.Shader;
 import com.lyspal.flappy.graphics.Texture;
 import com.lyspal.flappy.graphics.VertexArray;
+import com.lyspal.flappy.math.Matrix4f;
+import com.lyspal.flappy.math.Vector3f;
 
 /**
  * Implements a level in the game.
@@ -14,6 +16,10 @@ public class Level {
 
 	private VertexArray background;
 	private Texture bgTexture;
+	
+	// Scrolling background.
+	private int xScroll = 0;			// horizontal scroll for the bg.
+	private int map = 0;
 	
 	public Level() {
 		
@@ -52,11 +58,25 @@ public class Level {
 		bgTexture = new Texture("res/bg.jpeg");
 	}
 	
-	public void render() {
+	public void update() {
 		
+		// Background scrolling
+		
+		xScroll--;		// Scolling negative because we are moving map to the left.
+		if (-xScroll % 335 == 0) map++;
+	}
+	
+	public void render() {
 		bgTexture.bind();
 		Shader.BG.enable();
-		background.render();
+		background.bind();
+		
+		// Position at which the background map is rendered.
+		for (int i = map; i < map + 4; i++) {
+			Shader.BG.setUniformMat4f("vw_matrix", Matrix4f.translate(new Vector3f(i * 10 + xScroll * 0.03f, 0.0f, 0.0f)));
+			background.draw();
+		}
+		
 		Shader.BG.disable();
 		bgTexture.unbind();
 	}

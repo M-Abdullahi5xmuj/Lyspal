@@ -11,8 +11,6 @@ import com.lyspal.flappy.utils.ShaderUtils;
 
 /**
  * Repesent an actual shader.
- * 
- * @author sylvainlaporte
  *
  */
 public class Shader {
