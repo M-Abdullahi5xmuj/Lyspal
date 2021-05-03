@@ -19,7 +19,7 @@ public class Shader {
 	public static final int TCOORD_ATTRIB = 1;
 	
 	// Shaders
-	public static Shader BG;
+	public static Shader BG, BIRD;
 	
 	private boolean enabled = false;
 	
@@ -35,6 +35,7 @@ public class Shader {
 	 */
 	public static void loadAll() {
 		BG = new Shader("shaders/bg.vert", "shaders/bg.frag");
+		BIRD = new Shader("shaders/bird.vert", "shaders/bird.frag");
 	}
 	
 	// Uniform variables provides data to the GPU from the CPU.

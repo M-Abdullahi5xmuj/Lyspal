@@ -21,6 +21,8 @@ public class Level {
 	private int xScroll = 0;			// horizontal scroll for the bg.
 	private int map = 0;
 	
+	private Bird bird;
+	
 	public Level() {
 		
 		/*
@@ -36,7 +38,7 @@ public class Level {
 			  0.0f, -10.0f * 9.0f / 16.0f, 0.0f		// (3) bottom-right corner
 		};
 		
-		// Create triangle indices.
+		// Create triangle with indices.
 		// Indices are useful to avoid redundancy when defining triangles.
 		// They are the indices of the vertices array.
 		
@@ -56,29 +58,33 @@ public class Level {
 		
 		background = new VertexArray(vertices, indices, tcs);
 		bgTexture = new Texture("res/bg.jpeg");
+		
+		// Create a bird.
+		bird = new Bird();
 	}
 	
 	public void update() {
-		
 		// Background scrolling
-		
 		xScroll--;		// Scolling negative because we are moving map to the left.
 		if (-xScroll % 335 == 0) map++;
+		
+		bird.update();
 	}
 	
 	public void render() {
 		bgTexture.bind();
 		Shader.BG.enable();
-		background.bind();
+		background.bind();		// Bind the background once.
 		
 		// Position at which the background map is rendered.
 		for (int i = map; i < map + 4; i++) {
 			Shader.BG.setUniformMat4f("vw_matrix", Matrix4f.translate(new Vector3f(i * 10 + xScroll * 0.03f, 0.0f, 0.0f)));
 			background.draw();
 		}
-		
 		Shader.BG.disable();
 		bgTexture.unbind();
+		
+		bird.render();
 	}
 	
 }

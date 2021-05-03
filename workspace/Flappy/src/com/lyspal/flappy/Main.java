@@ -103,7 +103,7 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 		glfwShowWindow(window);
 		createCapabilities();
 		
-		// Set clear color, enable depth test and print OpenGL version to console.
+		// Sets clear color, enable depth test and print OpenGL version to console.
 		
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
@@ -111,14 +111,20 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 		System.out.println("OpenGL: " + glGetString(GL_VERSION));
 		Shader.loadAll();
 		
-		// Show the background.
+		// Shows the assets.
 		
+		// Creates a projection matrix.
 		Matrix4f pr_matrix = Matrix4f.orthographic(-10.0f, 10.0f, -10.0f * 9.0f / 16.0f, 10.0f * 9.0f / 16.0f, -1.0f, 1.0f);
+		
+		// Shows the background.
 		Shader.BG.setUniformMat4f("pr_matrix", pr_matrix);
 		Shader.BG.setUniform1i("tex", 1);
 		
-		// Create a new level.
+		// Shows the bird.
+		Shader.BIRD.setUniformMat4f("pr_matrix", pr_matrix);
+		Shader.BIRD.setUniform1i("tex", 1);
 		
+		// Creates a new level.
 		level = new Level();
 		
 	} 
@@ -129,6 +135,7 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 	public void run() {
 		init();				// init() OpenGl and render() have to be on the same thread.
 		
+		// Create a time for the game to run at 60 times per second.
 		long lastTime = System.nanoTime();
 		double delta = 0.0;
 		double ns = 1000000000.0 / 60.0;
@@ -147,6 +154,7 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 			}
 			render();
 			frames++;
+			// Display ups and fps in the console.
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
 				System.out.println(updates + " ups, " + frames + " fps");
