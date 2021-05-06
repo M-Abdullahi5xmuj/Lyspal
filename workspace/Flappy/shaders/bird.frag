@@ -11,6 +11,9 @@ uniform sampler2D tex;
 
 void main()
 {
-	// Set up the color of the backgroune.
+	// Set up the color of the bird.
 	color = texture(tex, fs_in.tc);
+	// Discard fragment if alpha is < 1.
+	if (color.w < 1.0)
+		discard;
 }

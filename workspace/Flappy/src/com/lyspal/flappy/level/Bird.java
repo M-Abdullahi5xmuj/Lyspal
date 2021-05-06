@@ -1,6 +1,6 @@
 package com.lyspal.flappy.level;
 
-import org.lwjgl.glfw.GLFW;
+import static org.lwjgl.glfw.GLFW.*;
 
 import com.lyspal.flappy.graphics.Shader;
 import com.lyspal.flappy.graphics.Texture;
@@ -16,8 +16,8 @@ public class Bird {
 	private Texture texture;
 	
 	private Vector3f position = new Vector3f();
-//	private float rot;
-//	private float delta = 0.0f;
+	private float rot;
+	private float delta = 0.0f;
 	
 	public Bird() {
 		float[] vertices = new float[] {
@@ -49,24 +49,25 @@ public class Bird {
 	}
 	
 	public void update() {
-		// Update the bird position when hitting keys.
-		if (Input.keys[GLFW.GLFW_KEY_UP]) {
-			position.y += 0.1f;
+		// Static fall when losing the game.
+		position.y -= delta;
+		if (Input.isKeyDown(GLFW_KEY_SPACE)) {
+			delta = -0.15f;
+		} else {
+			delta += 0.01f;
 		}
-		if (Input.keys[GLFW.GLFW_KEY_DOWN]) {
-			position.y -= 0.1f;
-		}
-		if (Input.keys[GLFW.GLFW_KEY_LEFT]) {
-			position.x -= 0.1f;
-		}
-		if (Input.keys[GLFW.GLFW_KEY_RIGHT]) {
-			position.x += 0.1f;
-		}
+		
+		// Rotate the bird.
+		rot = -delta * 90.0f;
+	}
+	
+	private void fall() {
+		delta = -0.15f;
 	}
 	
 	public void render() {
 		Shader.BIRD.enable();
-		Shader.BIRD.setUniformMat4f("ml_matrix", Matrix4f.translate(position));
+		Shader.BIRD.setUniformMat4f("ml_matrix", Matrix4f.translate(position).multiply(Matrix4f.rotate(rot)));
 		texture.bind();
 		mesh.render();
 		Shader.BIRD.disable();
