@@ -1,5 +1,6 @@
 package com.lyspal.flappy.graphics;
 
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class Shader {
 	public static final int TCOORD_ATTRIB = 1;
 	
 	// Shaders
-	public static Shader BG, BIRD;
+	public static Shader BG, BIRD, PIPE;
 	
 	private boolean enabled = false;
 	
@@ -36,6 +37,7 @@ public class Shader {
 	public static void loadAll() {
 		BG = new Shader("shaders/bg.vert", "shaders/bg.frag");
 		BIRD = new Shader("shaders/bird.vert", "shaders/bird.frag");
+		PIPE = new Shader("shaders/pipe.vert", "shaders/pipe.frag");
 	}
 	
 	// Uniform variables provides data to the GPU from the CPU.

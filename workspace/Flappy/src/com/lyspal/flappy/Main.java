@@ -111,19 +111,23 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 		System.out.println("OpenGL: " + glGetString(GL_VERSION));
 		Shader.loadAll();
 		
-		// Shows the assets.
+		// Setting shaders.
 		
 		// Creates a projection matrix.
 		Matrix4f pr_matrix = Matrix4f.orthographic(-10.0f, 10.0f, -10.0f * 9.0f / 16.0f, 10.0f * 9.0f / 16.0f, -1.0f, 1.0f);
 		
-		// Shows the background.
+		// Sets parameters for the background shader.
 		Shader.BG.setUniformMat4f("pr_matrix", pr_matrix);
 		Shader.BG.setUniform1i("tex", 1);
 		
-		// Shows the bird.
+		// Sets parameters for the bird shader.
 		Shader.BIRD.setUniformMat4f("pr_matrix", pr_matrix);
 		Shader.BIRD.setUniform1i("tex", 1);
 		
+		// Sets parameters for the pipe shader.
+		Shader.PIPE.setUniformMat4f("pr_matrix", pr_matrix);
+		Shader.PIPE.setUniform1i("tex", 1);
+
 		// Creates a new level.
 		level = new Level();
 		

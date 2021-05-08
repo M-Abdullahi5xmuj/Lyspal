@@ -1,5 +1,7 @@
 package com.lyspal.flappy.level;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import com.lyspal.flappy.graphics.Shader;
 import com.lyspal.flappy.graphics.Texture;
 import com.lyspal.flappy.graphics.VertexArray;
@@ -23,6 +25,9 @@ public class Level {
 	
 	private Bird bird;
 	
+	private Pipe[] pipes = new Pipe[5 * 2];
+	private int index = 0;
+	
 	public Level() {
 		
 		/*
@@ -35,7 +40,7 @@ public class Level {
 			-10.0f, -10.0f * 9.0f / 16.0f, 0.0f,		// (0) bottom-left corner
 			-10.0f,  10.0f * 9.0f / 16.0f, 0.0f,		// (1) top-left corner
 			  0.0f,  10.0f * 9.0f / 16.0f, 0.0f,		// (2) top-right corner
-			  0.0f, -10.0f * 9.0f / 16.0f, 0.0f		// (3) bottom-right corner
+			  0.0f, -10.0f * 9.0f / 16.0f, 0.0f			// (3) bottom-right corner
 		};
 		
 		// Create triangle with indices.
@@ -59,16 +64,48 @@ public class Level {
 		background = new VertexArray(vertices, indices, tcs);
 		bgTexture = new Texture("res/bg.jpeg");
 		
-		// Create a bird.
 		bird = new Bird();
+		
+		createPipes();
+	}
+	
+	private void createPipes() {
+		Pipe.create();
+		for (int i = 0; i < 5 * 2; i += 2) {
+			// Top pipe.
+			pipes[i] = new Pipe(index * 3.0f, 4.0f);
+			// Bottom pipe.
+			pipes[i + 1] = new Pipe(pipes[i].getX(), pipes[i].getY() - 10.0f);
+			index += 2;
+		}
+	}
+	
+	private void updatePipes() {
+//		pipes[];
 	}
 	
 	public void update() {
-		// Background scrolling
-		xScroll--;		// Scolling negative because we are moving map to the left.
+		// Background scrolling.
+		// Scolling negative because we are moving map to the left.
+		xScroll--;
 		if (-xScroll % 335 == 0) map++;
 		
 		bird.update();
+	}
+	
+	private void renderPipes() {
+		Shader.PIPE.enable();
+		Shader.PIPE.setUniformMat4f("vw_matrix", Matrix4f.translate(new Vector3f(xScroll * 0.05f, 0.0f, 0.0f)));
+		Pipe.getTexture().bind();
+		Pipe.getMesh().bind();
+		
+		for (int i = 0; i < 5 * 2; i++) {
+			Shader.PIPE.setUniformMat4f("ml_matrix", pipes[i].getModelMatrix());
+			Pipe.getMesh().draw();
+		}
+		
+		Pipe.getMesh().unbind();
+		Pipe.getTexture().unbind();
 	}
 	
 	public void render() {
@@ -84,6 +121,7 @@ public class Level {
 		Shader.BG.disable();
 		bgTexture.unbind();
 		
+		renderPipes();
 		bird.render();
 	}
 	
