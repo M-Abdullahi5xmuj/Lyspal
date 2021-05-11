@@ -8,6 +8,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 import org.lwjgl.glfw.GLFWVidMode;
 
+import com.lyspal.flappy.graphics.GLDebug;
 import com.lyspal.flappy.graphics.Shader;
 import com.lyspal.flappy.input.Input;
 import com.lyspal.flappy.level.Level;
@@ -74,7 +75,7 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 		if ( !glfwInit() ) {
 			throw new IllegalStateException("Unable to initialize GLFW");
 		}
-		
+				
 		// Create a window.
 		
 		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
@@ -186,11 +187,7 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		level.render();
 		
-		// OpenGL error checking
-		int error = glGetError();
-		if (error != GL_NO_ERROR) {
-			System.out.println(error);
-		}
+		GLDebug.GLCheckError();
 		
 		glfwSwapBuffers(window);
 	}

@@ -9,11 +9,16 @@ import com.lyspal.flappy.utils.BufferUtils;
 
 public class VertexArray {
 	
-	private int vao,	// vertex array object.
+	private int vao,	// vertex array object
 				vbo,	// vertex buffer object
 				ibo,	// indices buffer object
 				tbo;	// texture buffer object
 	private int count;
+	
+	public VertexArray(int count) {
+		this.count = count;
+		vao = glGenVertexArrays();
+	}
 	
 	public VertexArray(float[] vertices, byte[] indices, float[] textureCoordinates) {
 		count = indices.length;
@@ -45,17 +50,25 @@ public class VertexArray {
 	}
 
 	public void bind() {
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 		glBindVertexArray(vao);
+		if (ibo > 0) {
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+		}
 	}
 	
 	public void unbind() {
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		if (ibo > 0) {
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		}
 		glBindVertexArray(0);
 	}
 	
 	public void draw() {
-		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_BYTE, 0);
+		if (ibo > 0) {
+			glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_BYTE, 0);
+		} else {
+			glDrawArrays(GL_TRIANGLES, 0, count);
+		}
 	}
 	
 	public void render() {

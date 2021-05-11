@@ -13,7 +13,7 @@ uniform mat4 ml_matrix = mat4(1.0);		// Model matrix.
 out DATA
 {
 	vec2 tc;
-//	vec3 position;
+	vec3 position;
 } vs_out;	// vertex shader out
 
 void main()
@@ -21,5 +21,5 @@ void main()
 	// Set up the position of the pipe.
 	gl_Position = pr_matrix * vw_matrix * ml_matrix * position;
 	vs_out.tc = tc;
-//	vs_out.position = vec3()vw_matrix * ml_matrix * position);
+	vs_out.position = vec3(vw_matrix * ml_matrix * position);
 }

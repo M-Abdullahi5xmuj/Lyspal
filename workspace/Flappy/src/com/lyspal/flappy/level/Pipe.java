@@ -1,7 +1,5 @@
 package com.lyspal.flappy.level;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import com.lyspal.flappy.graphics.Texture;
 import com.lyspal.flappy.graphics.VertexArray;
 import com.lyspal.flappy.math.Matrix4f;
@@ -9,7 +7,6 @@ import com.lyspal.flappy.math.Vector3f;
 
 /**
  * Static pipes assets.
- * 
  */
 public class Pipe {
 
@@ -46,11 +43,6 @@ public class Pipe {
 		
 		mesh = new VertexArray(vertices, indices, tcs);
 		texture = new Texture("res/pipe.png");
-		// OpenGL error checking
-		int error = glGetError();
-		if (error != GL_NO_ERROR) {
-			System.out.println(error);
-		}
 	}
 	
 	public Pipe(float x, float y) {

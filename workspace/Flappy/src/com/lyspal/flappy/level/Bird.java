@@ -21,11 +21,11 @@ public class Bird {
 	
 	public Bird() {
 		float[] vertices = new float[] {
-			// TODO Debug the bird showing behind the background.
-			-SIZE / 2.0f, -SIZE / 2.0f, 0.1f,
-			-SIZE / 2.0f,  SIZE / 2.0f, 0.1f,
-			 SIZE / 2.0f,  SIZE / 2.0f, 0.1f,
-			 SIZE / 2.0f, -SIZE / 2.0f, 0.1f
+			//    X     ,       Y     ,   Z
+			-SIZE / 2.0f, -SIZE / 2.0f, 0.2f,
+			-SIZE / 2.0f,  SIZE / 2.0f, 0.2f,
+			 SIZE / 2.0f,  SIZE / 2.0f, 0.2f,
+			 SIZE / 2.0f, -SIZE / 2.0f, 0.2f
 		};
 		
 		// Create triangle with indices.
@@ -61,9 +61,9 @@ public class Bird {
 		rot = -delta * 90.0f;
 	}
 	
-	private void fall() {
-		delta = -0.15f;
-	}
+//	private void fall() {
+//		delta = -0.15f;
+//	}
 	
 	public void render() {
 		Shader.BIRD.enable();

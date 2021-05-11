@@ -1,7 +1,5 @@
 package com.lyspal.flappy.level;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import com.lyspal.flappy.graphics.Shader;
 import com.lyspal.flappy.graphics.Texture;
 import com.lyspal.flappy.graphics.VertexArray;
@@ -27,7 +25,7 @@ public class Level {
 	
 	private Pipe[] pipes = new Pipe[5 * 2];
 	private int index = 0;
-	
+		
 	public Level() {
 		
 		/*
@@ -37,6 +35,7 @@ public class Level {
 		// Create vertices.
 		
 		float[] vertices = new float[] {
+			//  X ,            Y         ,   Z
 			-10.0f, -10.0f * 9.0f / 16.0f, 0.0f,		// (0) bottom-left corner
 			-10.0f,  10.0f * 9.0f / 16.0f, 0.0f,		// (1) top-left corner
 			  0.0f,  10.0f * 9.0f / 16.0f, 0.0f,		// (2) top-right corner
@@ -72,17 +71,17 @@ public class Level {
 	private void createPipes() {
 		Pipe.create();
 		for (int i = 0; i < 5 * 2; i += 2) {
-			// Top pipe.
+			// Top pipes.
 			pipes[i] = new Pipe(index * 3.0f, 4.0f);
-			// Bottom pipe.
+			// Bottom pipes.
 			pipes[i + 1] = new Pipe(pipes[i].getX(), pipes[i].getY() - 10.0f);
 			index += 2;
 		}
 	}
 	
-	private void updatePipes() {
+//	private void updatePipes() {
 //		pipes[];
-	}
+//	}
 	
 	public void update() {
 		// Background scrolling.
@@ -95,12 +94,13 @@ public class Level {
 	
 	private void renderPipes() {
 		Shader.PIPE.enable();
-		Shader.PIPE.setUniformMat4f("vw_matrix", Matrix4f.translate(new Vector3f(xScroll * 0.05f, 0.0f, 0.0f)));
+		Shader.PIPE.setUniformMat4f("vw_matrix", Matrix4f.translate(new Vector3f(xScroll * 0.03f, 0.0f, 0.0f)));
 		Pipe.getTexture().bind();
 		Pipe.getMesh().bind();
 		
 		for (int i = 0; i < 5 * 2; i++) {
 			Shader.PIPE.setUniformMat4f("ml_matrix", pipes[i].getModelMatrix());
+//			Shader.PIPE.setUniform1i("top", i % 2 == 0 ? 1 : 0);
 			Pipe.getMesh().draw();
 		}
 		
