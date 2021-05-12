@@ -1,5 +1,7 @@
 package com.lyspal.flappy.level;
 
+import java.util.Random;
+
 import com.lyspal.flappy.graphics.Shader;
 import com.lyspal.flappy.graphics.Texture;
 import com.lyspal.flappy.graphics.VertexArray;
@@ -25,6 +27,8 @@ public class Level {
 	
 	private Pipe[] pipes = new Pipe[5 * 2];
 	private int index = 0;
+	
+	private Random random = new Random();
 		
 	public Level() {
 		
@@ -72,9 +76,9 @@ public class Level {
 		Pipe.create();
 		for (int i = 0; i < 5 * 2; i += 2) {
 			// Top pipes.
-			pipes[i] = new Pipe(index * 3.0f, 4.0f);
+			pipes[i] = new Pipe(index * 3.0f, random.nextFloat() * 4.0f);
 			// Bottom pipes.
-			pipes[i + 1] = new Pipe(pipes[i].getX(), pipes[i].getY() - 10.0f);
+			pipes[i + 1] = new Pipe(pipes[i].getX(), pipes[i].getY() - 11.0f);
 			index += 2;
 		}
 	}
@@ -100,6 +104,8 @@ public class Level {
 		
 		for (int i = 0; i < 5 * 2; i++) {
 			Shader.PIPE.setUniformMat4f("ml_matrix", pipes[i].getModelMatrix());
+			// Set a variable for the top pipes
+			// TODO bug when inverting top pipes
 //			Shader.PIPE.setUniform1i("top", i % 2 == 0 ? 1 : 0);
 			Pipe.getMesh().draw();
 		}

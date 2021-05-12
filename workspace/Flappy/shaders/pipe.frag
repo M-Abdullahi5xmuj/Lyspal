@@ -15,7 +15,7 @@ uniform sampler2D tex;
 void main()
 {
 //	if (top == 1)
-//		fs_in.tc.y = 1.0 - fs_in.tc.y;		// Bug: Left-hand-side of assignment must not be read-only
+//		fs_in.tc.y = 1.0 - fs_in.tc.y;
 
 	// Set up the color of the pipe.
 	color = texture(tex, fs_in.tc);

@@ -57,7 +57,9 @@ public class Shader {
 		
 		// Otherwise, get a new uniform location, put it in cache and return it.
 		
+		GLDebug.GLClearError();
 		int result = glGetUniformLocation(ID, name);
+		GLDebug.GLCheckError();
 		
 		if (result == -1) {
 			System.err.println("Could not find uniform variable '" + name + "'!");
