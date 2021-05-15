@@ -19,7 +19,7 @@ public class Shader {
 	public static final int TCOORD_ATTRIB = 1;
 	
 	// Shaders
-	public static Shader BG, BIRD, PIPE;
+	public static Shader BG, BIRD, PIPE, FADE;
 	
 	private boolean enabled = false;
 	
@@ -37,6 +37,7 @@ public class Shader {
 		BG = new Shader("shaders/bg.vert", "shaders/bg.frag");
 		BIRD = new Shader("shaders/bird.vert", "shaders/bird.frag");
 		PIPE = new Shader("shaders/pipe.vert", "shaders/pipe.frag");
+		FADE = new Shader("shaders/fade.vert", "shaders/fade.frag");
 	}
 	
 	// Uniform variables provides data to the GPU from the CPU.

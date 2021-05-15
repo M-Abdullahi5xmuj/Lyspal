@@ -61,9 +61,9 @@ public class Bird {
 		rot = -delta * 90.0f;
 	}
 	
-//	private void fall() {
-//		delta = -0.15f;
-//	}
+	public void fall() {
+		delta = -0.15f;
+	}
 	
 	public void render() {
 		Shader.BIRD.enable();
@@ -71,5 +71,13 @@ public class Bird {
 		texture.bind();
 		mesh.render();
 		Shader.BIRD.disable();
+	}
+
+	public float getY() {
+		return position.y;
+	}
+
+	public float getSize() {
+		return SIZE;
 	}
 }
