@@ -8,7 +8,7 @@ in DATA
 	vec3 position;
 } fs_in;	// fragment shader in
 
-//uniform vec2 bird;
+uniform vec2 bird;
 uniform sampler2D tex;
 //uniform int top;
 
@@ -22,6 +22,8 @@ void main()
 	// Discard fragment if alpha is < 1.
 	if (color.w < 1.0)
 		discard;
-//	color *= 2.0 / (length(bird - fs_in.position.xy) + 1.5) + 0.5;
+
+	// Add lighthing.
+	color *= 2.0 / (length(bird - fs_in.position.xy) + 1.5) + 0.6;
 	color.w = 1.0;
 }

@@ -83,14 +83,14 @@ public class Level {
 			// Top pipes.
 			pipes[i] = new Pipe(offset + index * 3.0f, random.nextFloat() * 4.0f);
 			// Bottom pipes.
-			pipes[i + 1] = new Pipe(pipes[i].getX(), pipes[i].getY() - 11.5f);
+			pipes[i + 1] = new Pipe(pipes[i].getX(), pipes[i].getY() - 12.5f);
 			index += 2;
 		}
 	}
 	
 	private void updatePipes() {
 		pipes[index % 10] = new Pipe(offset + index * 3.0f, random.nextFloat() * 4.0f);
-		pipes[(index + 1) % 10] = new Pipe(pipes[index % 10].getX(), pipes[index % 10].getY() - 11.0f);
+		pipes[(index + 1) % 10] = new Pipe(pipes[index % 10].getX(), pipes[index % 10].getY() - 12.5f);
 		index += 2;
 	}
 	
@@ -121,6 +121,7 @@ public class Level {
 	
 	private void renderPipes() {
 		Shader.PIPE.enable();
+		Shader.PIPE.setUniform2f("bird", 0, bird.getY());
 		// Scrolling pipes with parallax
 		Shader.PIPE.setUniformMat4f("vw_matrix", Matrix4f.translate(new Vector3f(xScroll * 0.05f, 0.0f, 0.0f)));
 		Pipe.getTexture().bind();
