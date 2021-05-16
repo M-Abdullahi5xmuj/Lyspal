@@ -19,7 +19,7 @@ void main()
 {
 	// Set up the position of the background.
 	gl_Position = pr_matrix * vw_matrix * position;
-
 	vs_out.tc = tc;
+	// For lighthing.
 	vs_out.position = vec3(vw_matrix * position);
 }

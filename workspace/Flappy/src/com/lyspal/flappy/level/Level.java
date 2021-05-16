@@ -172,6 +172,7 @@ public class Level {
 	public void render() {
 		bgTexture.bind();
 		Shader.BG.enable();
+		Shader.BG.setUniform2f("bird", 0, bird.getY());
 		background.bind();		// Bind the background once.
 		
 		// Position at which the background map is rendered.

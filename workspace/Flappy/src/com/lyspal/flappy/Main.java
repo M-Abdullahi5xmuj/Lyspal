@@ -106,11 +106,13 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 		
 		// Sets clear color, enable depth test and print OpenGL version to console.
 		
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
 		glActiveTexture(GL_TEXTURE1);
+		
+		// Enable bend for fading
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
 		System.out.println("OpenGL: " + glGetString(GL_VERSION));
 		Shader.loadAll();
 		
