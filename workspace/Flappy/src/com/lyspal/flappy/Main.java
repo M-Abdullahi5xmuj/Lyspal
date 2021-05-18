@@ -186,6 +186,9 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 	private void update() {
 		glfwPollEvents();
 		level.update();
+		if (level.isGameOver()) {
+			level = new Level();
+		}
 	}
 	
 	/**

@@ -1,10 +1,13 @@
 package com.lyspal.flappy.level;
 
+import static org.lwjgl.glfw.GLFW.*;
+
 import java.util.Random;
 
 import com.lyspal.flappy.graphics.Shader;
 import com.lyspal.flappy.graphics.Texture;
 import com.lyspal.flappy.graphics.VertexArray;
+import com.lyspal.flappy.input.Input;
 import com.lyspal.flappy.math.Matrix4f;
 import com.lyspal.flappy.math.Vector3f;
 
@@ -29,7 +32,7 @@ public class Level {
 	private int index = 0;
 		
 	private float offset = 5.0f;
-	private boolean control = true;
+	private boolean control = true, reset = false;
 	
 	private Random random = new Random();
 	
@@ -116,6 +119,10 @@ public class Level {
 			control = false;
 		}
 		
+		if (!control && Input.isKeyDown(GLFW_KEY_SPACE)) {
+			reset = true;
+		}
+		
 		time += 0.01f;
 	}
 	
@@ -168,6 +175,10 @@ public class Level {
 			}
 		}
 		return false;
+	}
+	
+	public boolean isGameOver() {
+		return reset;
 	}
 	
 	public void render() {
