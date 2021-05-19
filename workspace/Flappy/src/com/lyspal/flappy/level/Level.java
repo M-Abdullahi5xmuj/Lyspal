@@ -137,8 +137,7 @@ public class Level {
 		for (int i = 0; i < 5 * 2; i++) {
 			Shader.PIPE.setUniformMat4f("ml_matrix", pipes[i].getModelMatrix());
 			// Set a variable for the top pipes
-			// TODO bug when inverting top pipes
-//			Shader.PIPE.setUniform1i("top", i % 2 == 0 ? 1 : 0);
+			Shader.PIPE.setUniform1i("top", i % 2 == 0 ? 1 : 0);
 			Pipe.getMesh().draw();
 		}
 		
