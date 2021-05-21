@@ -6,18 +6,19 @@ import com.lyspal.flappy.math.Matrix4f;
 import com.lyspal.flappy.math.Vector3f;
 
 /**
- * Static pipes assets.
+ * A pipe asset.
  */
 public class Pipe {
 
-	private Vector3f position = new Vector3f();
-	private Matrix4f ml_matrix;
-	
 	private static float width = 1.5f, height = 8.0f;
 	private static Texture texture;
 	private static VertexArray mesh;
 	
+	/**
+	 * Creates the pipe mesh and texture.
+	 */
 	public static void create() {
+		// Create the vertices.
 		float[] vertices = new float[] {
 			0.0f, 0.0f, 0.1f,
 			0.0f, height, 0.1f,
@@ -25,15 +26,13 @@ public class Pipe {
 			width, 0.0f, 0.1f
 		};
 		
-		// Create triangle with indices.
-		
+		// Create the triangles with indices.
 		byte[] indices = new byte[] {
 				0, 1, 2,
 				2, 3, 0
 		};
 		
 		// Create texture coordinate system.
-		
 		float[] tcs = new float[] {
 			0, 1,
 			0, 0,
@@ -45,6 +44,15 @@ public class Pipe {
 		texture = new Texture("res/pipe.png");
 	}
 	
+	private Vector3f position = new Vector3f();
+	private Matrix4f ml_matrix;
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param x		the x position
+	 * @param y		the y position
+	 */
 	public Pipe(float x, float y) {
 		position.x = x;
 		position.y = y;

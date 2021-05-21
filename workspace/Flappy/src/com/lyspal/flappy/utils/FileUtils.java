@@ -4,13 +4,22 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * Utility class for files.
+ * 
+ * @author sylvainlaporte
+ */
 public class FileUtils {
 
+	/**
+	 * Constructor.
+	 */
 	private FileUtils() {
+		
 	}
 	
 	/**
-	 * Read a file and load it as a string.
+	 * Reads a file and loads it as a string.
 	 * 
 	 * @param file		file to load
 	 * @return			resulting string

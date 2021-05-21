@@ -8,21 +8,27 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 import org.lwjgl.glfw.GLFWVidMode;
 
-import com.lyspal.flappy.graphics.GLDebug;
 import com.lyspal.flappy.graphics.Shader;
 import com.lyspal.flappy.input.Input;
 import com.lyspal.flappy.level.Level;
 import com.lyspal.flappy.math.Matrix4f;
 
-public class Main implements Runnable {		// Runnable = class that has a runnable method.
+/**
+ * Entry point of the program.
+ * <p>
+ * Runnable = class that implements a runnable method.
+ * 
+ * @author sylvainlaporte
+ */
+public class Main implements Runnable {
 	
-	private int width = 1280;			// window width.
-	private int height = 720;			// window height.
+	// Window dimensions
+	private int width = 1280;
+	private int height = 720;
 	
-	private boolean running = true;		// game running.
+	private boolean running = true;
 	
-	private long window;				// window identifier.
-	
+	private long window;
 	private Level level;
 
 	/*
@@ -65,86 +71,95 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 	
 	
 	/**
+	 * Initialize the game.
+	 * <p>
 	 * Initialize everything that is required in update() and render(), including:
-	 * 	- creating and showing a window;
-	 * 	- callbacks for controls;
-	 * 	- an OpenGL context;
-	 *  - enable depth test.
+	 * <ol>
+	 * 	<li>creating and showing a window;</li>
+	 * 	<li>callbacks for controls;</li>
+	 * 	<li>an OpenGL context;</li>
+	 *  <li>enable depth test.</li>
+	 * </ol>
 	 */
 	private void init() {
+		// Initialize GLFW.
+		
 		if ( !glfwInit() ) {
 			throw new IllegalStateException("Unable to initialize GLFW");
 		}
-				
-		// Create a window.
 		
 		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		window = glfwCreateWindow(width, height, "Flappy", NULL, NULL);
 		
+		// Create a window.
+		
+		window = glfwCreateWindow(width, height, "Flappy", NULL, NULL);
 		if (window == NULL) {
 			throw new RuntimeException("Failed to create the GLFW window");
 		}
 		
-		// Position the window.
-		
 		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		glfwSetWindowPos(window, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
+		glfwSetWindowPos(window, (vidmode.width() - width) / 2,
+								 (vidmode.height() - height) / 2);
 		
-		// Set the key callback for controls.
-		
+		// Set the key callback for the controls.
 		glfwSetKeyCallback(window, new Input());
 		
-		// Show the window and create an OpenGL context.
-		
+		// Create an OpenGL context and show the window.
 		glfwMakeContextCurrent(window);
 		glfwShowWindow(window);
 		createCapabilities();
 		
-		// Sets clear color, enable depth test and print OpenGL version to console.
-		
+		// Enable depth test.
 		glEnable(GL_DEPTH_TEST);
 		glActiveTexture(GL_TEXTURE1);
 		
-		// Enable bend for fading
+		// Enable blend for fading.
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
+		// Print OpenGL version to console.
 		System.out.println("OpenGL: " + glGetString(GL_VERSION));
+		
+		// Set the shaders.
+		
 		Shader.loadAll();
 		
-		// Setting shaders.
+		// Create a projection matrix.
+		Matrix4f pr_matrix = Matrix4f.orthographic(
+			-10.0f, 10.0f,									// left, right
+			-10.0f * 9.0f / 16.0f, 10.0f * 9.0f / 16.0f,	// bottom, top
+			-1.0f, 1.0f										// near, far
+		);
 		
-		// Creates a projection matrix.
-		Matrix4f pr_matrix = Matrix4f.orthographic(-10.0f, 10.0f, -10.0f * 9.0f / 16.0f, 10.0f * 9.0f / 16.0f, -1.0f, 1.0f);
-		
-		// Sets parameters for the background shader.
+		// Set parameters for the background shader.
 		Shader.BG.setUniformMat4f("pr_matrix", pr_matrix);
 		Shader.BG.setUniform1i("tex", 1);
 		
-		// Sets parameters for the bird shader.
+		// Set parameters for the bird shader.
 		Shader.BIRD.setUniformMat4f("pr_matrix", pr_matrix);
 		Shader.BIRD.setUniform1i("tex", 1);
 		
-		// Sets parameters for the pipe shader.
+		// Set parameters for the pipe shader.
 		Shader.PIPE.setUniformMat4f("pr_matrix", pr_matrix);
 		Shader.PIPE.setUniform1i("tex", 1);
 		
-		// Creates a new level.
+		// Create a new level.
 		level = new Level();
-		
 	} 
 	
 	/**
-	 * Method run by the new thread "Game" for rendering and game logic.
+	 * Run the game.
+	 * <p>
+	 * On MacOs, init() OpenGl and render() have to be on the same thread.
 	 */
 	public void run() {
-		init();				// init() OpenGl and render() have to be on the same thread.
+		init();
 		
-		// Create a time for the game to run at 60 times per second.
+		// Create time variables to track ups and fps.
 		long lastTime = System.nanoTime();
 		double delta = 0.0;
 		double ns = 1000000000.0 / 60.0;
@@ -152,17 +167,22 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 		int updates = 0;
 		int frames = 0;
 		
+		// Main game loop.
 		while (running) {
+			// Create a timer to keep the game running at 60 fps.
 			long now = System.nanoTime();
 			delta += (now - lastTime) / ns;
 			lastTime = now;
 			if (delta >= 1.0) {
+				// Update the level.
 				update();
 				updates++;
 				delta--;
 			}
+			// Render the next frame.
 			render();
 			frames++;
+			
 			// Display ups and fps in the console.
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
@@ -171,11 +191,12 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 				frames = 0;
 			}
 			
+			// Stop the game if the window is closed.
 			if (glfwWindowShouldClose(window))
 				running = false;
 		}
 		
-		// Terminate GLFW
+		// Terminate GLFW when the game stops.
 		glfwDestroyWindow(window);
 		glfwTerminate();
 	}
@@ -184,26 +205,30 @@ public class Main implements Runnable {		// Runnable = class that has a runnable
 	 * Game logic.
 	 */
 	private void update() {
+		// Retreive control events.
 		glfwPollEvents();
+		// Update the level.
 		level.update();
+		// Restart the game if game over.
 		if (level.isGameOver()) {
 			level = new Level();
 		}
 	}
 	
 	/**
-	 * Rendering.
+	 * Render the frames.
 	 */
 	private void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		level.render();
-		
-		GLDebug.GLCheckError();
-		
+		level.render();		
 		glfwSwapBuffers(window);
 	}
 	
-	
+	/**
+	 * Entry point of the program.
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		Main main = new Main();
 		main.run();

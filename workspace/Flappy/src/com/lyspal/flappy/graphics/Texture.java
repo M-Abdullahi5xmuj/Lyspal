@@ -10,16 +10,33 @@ import com.lyspal.flappy.utils.BufferUtils;
 
 import  static org.lwjgl.opengl.GL11.*;
 
+/**
+ * A texture.
+ * 
+ * @author sylvainlaporte
+ */
 public class Texture {
 
 	private int width, height;
 	private int texture;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param path 	the path to the file containing the texture
+	 */
 	public Texture(String path) {
 		texture = load(path);
 	}
 	
+	/**
+	 * Loads a texture file.
+	 * 
+	 * @param path	the path to the texture file
+	 * @return		the number of unused textures
+	 */
 	private int load(String path) {
+		// Read the texture file.
 		int[] pixels = null;
 		try {
 			BufferedImage image = ImageIO.read(new FileInputStream(path));
@@ -31,53 +48,48 @@ public class Texture {
 			e.printStackTrace();
 		}
 		
-		// Rearrange data.
-		
+		// Rearrange data by color channels.
 		int[] data = new int[width * height];
-		
 		for (int i = 0; i < width * height; i++) {
 			int a = (pixels[i] & 0xff000000) >> 24;
 			int r = (pixels[i] & 0xff0000) >> 16;
 			int g = (pixels[i] & 0xff00) >> 8;
 			int b = (pixels[i] & 0xff);
-			
 			data[i] = a << 24 | b << 16 | g << 8 | r;
 		}
 		
+		// Generate the textures.
 		int result = glGenTextures();
 		
-		// Select the binding (like a "layer" like in Photoshop).
-		
+		// Select the binding (like a "layer" in Photoshop).
 		glBindTexture(GL_TEXTURE_2D, result);
 		
-		//For scalling textures.
-		
+		// Scale the textures.
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		
-		// Assign texture to the layer.
-		
+		// Assign a texture to a layer.
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
 					 GL_UNSIGNED_BYTE, BufferUtils.createIntBuffer(data));
 		
 		// Deselect the binding.
-		
 		glBindTexture(GL_TEXTURE_2D, 0);
 		
 		return result;
 	}
 	
+	/**
+	 * Binds a texture to a layer / select the binding.
+	 */
 	public void bind() {
-		
-		// Select the binding (like a "layer" like in Photoshop).
-		
 		glBindTexture(GL_TEXTURE_2D, texture);
 	}
 	
+	/**
+	 * Unbind a texture from a layer / deselect the binding.
+	 */
 	public void unbind() {
-		
-		// Deselect the binding.
-		
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+	
 }

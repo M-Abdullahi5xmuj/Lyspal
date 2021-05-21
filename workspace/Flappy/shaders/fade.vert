@@ -1,3 +1,4 @@
+// Vertex shader for the fade.
 #version 330 core
 
 void main()

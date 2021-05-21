@@ -10,28 +10,17 @@ import com.lyspal.flappy.math.Vector3f;
 import com.lyspal.flappy.utils.ShaderUtils;
 
 /**
- * Repesent an actual shader.
- *
+ * A shader.
  */
 public class Shader {
 
 	public static final int VERTEX_ATTRIB = 0;
 	public static final int TCOORD_ATTRIB = 1;
 	
-	// Shaders
-	public static Shader BG, BIRD, PIPE, FADE;
-	
-	private boolean enabled = false;
-	
-	private final int ID;
-	private Map<String, Integer> locationCache = new HashMap<String, Integer>();
-	
-	public Shader(String vertex, String fragment) {
-		ID = ShaderUtils.load(vertex, fragment);
-	}
+	public static Shader BG, BIRD, PIPE, FADE;		// the shaders
 	
 	/**
-	 * Load every shaders for the game.
+	 * Create and load every shaders for the game.
 	 */
 	public static void loadAll() {
 		BG = new Shader("shaders/bg.vert", "shaders/bg.frag");
@@ -40,28 +29,40 @@ public class Shader {
 		FADE = new Shader("shaders/fade.vert", "shaders/fade.frag");
 	}
 	
-	// Uniform variables provides data to the GPU from the CPU.
+	private boolean enabled = false;
+	private final int ID;
+	
+	private Map<String, Integer> locationCache = new HashMap<String, Integer>();
 	
 	/**
-	 * Get a uniform varible by its name.
+	 * Constructor.
 	 * 
-	 * @param name		name of the uniform variable
-	 * @return			address of thee uniform variable
+	 * @param vertex	the path to the vertex shader
+	 * @param fragment	the path to the fragment shader
+	 */
+	public Shader(String vertex, String fragment) {
+		ID = ShaderUtils.load(vertex, fragment);
+	}
+	
+	/**
+	 * Uniform variables
+	 * 
+	 * Uniform variables provides data to the GPU from the CPU.
+	 */
+	
+	/**
+	 * Get a uniform variable by its name.
+	 * 
+	 * @param name		the name of the uniform variable
+	 * @return			the address of thee uniform variable
 	 */
 	public int getUniform(String name) {
-		
 		// Return existing location if it already exists in cache.
-		
 		if (locationCache.containsKey(name)) {
 			return locationCache.get(name);
 		}
-		
 		// Otherwise, get a new uniform location, put it in cache and return it.
-		
-		GLDebug.GLClearError();
-		int result = glGetUniformLocation(ID, name);
-		GLDebug.GLCheckError();
-		
+		int result = glGetUniformLocation(ID, name);		
 		if (result == -1) {
 			System.err.println("Could not find uniform variable '" + name + "'!");
 		} else {
@@ -69,14 +70,12 @@ public class Shader {
 		}
 		return result;
 	}
-	
-	// Methods for setting uniform variables.
-	
+		
 	/**
-	 * Set a 1 int uniform variable.
+	 * Sets a 1 int uniform variable.
 	 * 
-	 * @param name		name of the uniform variable
-	 * @param value		value to put in the uniform variable
+	 * @param name		the name of the uniform variable
+	 * @param value		the value of the int
 	 */
 	public void setUniform1i(String name, int value) {
 		if (!enabled) enable();
@@ -84,10 +83,10 @@ public class Shader {
 	}
 	
 	/**
-	 * Set a 1 float uniform variable.
+	 * Sets a 1 float uniform variable.
 	 * 
-	 * @param name		name of the uniform variable
-	 * @param value		value to put in the uniform variable
+	 * @param name		the name of the uniform variable
+	 * @param value		the value tof the float
 	 */
 	public void setUniform1f(String name, float value) {
 		if (!enabled) enable();
@@ -95,11 +94,11 @@ public class Shader {
 	}
 	
 	/**
-	 * Set a 2 float uniform variable.
+	 * Sets a 2 float uniform variable.
 	 * 
-	 * @param name		name of the uniform variable
-	 * @param x			value of the first float
-	 * @param y			value of the second float
+	 * @param name		the name of the uniform variable
+	 * @param x			the value of the first float
+	 * @param y			the value of the second float
 	 */
 	public void setUniform2f(String name, float x, float y) {
 		if (!enabled) enable();
@@ -107,30 +106,41 @@ public class Shader {
 	}
 	
 	/**
-	 * Set a 3 float uniform variable.
+	 * Sets a 3 float uniform variable.
 	 * 
-	 * @param name		name of the uniform variable
-	 * @param x			value of the first float
-	 * @param y			value of the second float
+	 * @param name		the name of the uniform variable
+	 * @param x			the value of the first float
+	 * @param y			the value of the second float
 	 */
 	public void setUniform3f(String name, Vector3f vector) {
 		if (!enabled) enable();
 		glUniform3f(getUniform(name), vector.x, vector.y, vector.z);
 	}
 	
+	/**
+	 * Sets a 4 x 4 float matrix uniform variable.
+	 * 
+	 * @param name		the name of the uniform variable
+	 * @param matrix	the value of the matrix
+	 */
 	public void setUniformMat4f(String name, Matrix4f matrix) {
 		if (!enabled) enable();
-		glUniformMatrix4fv(getUniform(name), false, matrix.toFloatBuffer());	// Modified method for newer OpenGl
-			// transpose = false because the matrices are column major.
+		// Modified method for LWJGL3.
+		glUniformMatrix4fv(getUniform(name), false, matrix.toFloatBuffer());
+			// transpose is false because the matrices are column major.
 	}
-	
-	// Methods for enabling and disabling the shader.
-	
+		
+	/**
+	 * Enables a shader.
+	 */
 	public void enable() {
 		glUseProgram(ID);
 		enabled = true;
 	}
 	
+	/**
+	 * Disables a shader.
+	 */
 	public void disable() {
 		glUseProgram(0);
 		enabled = false;

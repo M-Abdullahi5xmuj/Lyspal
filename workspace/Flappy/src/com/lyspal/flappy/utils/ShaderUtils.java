@@ -2,16 +2,26 @@ package com.lyspal.flappy.utils;
 
 import static org.lwjgl.opengl.GL20.*;
 
+/**
+ * Utility class for shaders.
+ * 
+ * @author sylvainlaporte
+ */
 public class ShaderUtils {
 
+	/**
+	 * Constructor.
+	 */
 	private ShaderUtils() {
+		
 	}
 	
 	/**
-	 * Load the files containing the vert and frag informationé
-	 * @param vertPath		path to the vert file
-	 * @param fragPath		path to the frag file
-	 * @return				an openGL program
+	 * Loads the files containing the vert and frag information.
+	 * 
+	 * @param vertPath		the path to the vert file
+	 * @param fragPath		the path to the frag file
+	 * @return				the resulting shader
 	 */
 	public static int load(String vertPath, String fragPath) {
 		String vert = FileUtils.loadAsString(vertPath);
@@ -20,19 +30,22 @@ public class ShaderUtils {
 	}
 	
 	/**
-	 * Create the program to run on the GPU (aka shaders).
+	 * Creates a shader, a program to run on the GPU.
 	 * 
-	 * @param vert
-	 * @param frag
-	 * @return
+	 * @param vert	the vertex shader source code
+	 * @param frag	the fragment shader source code
+	 * @return		the resulting shader
 	 */
 	public static int create(String vert, String frag) {
 		int program = glCreateProgram();
+		// Get shader IDs.
 		int vertID = glCreateShader(GL_VERTEX_SHADER);
 		int fragID = glCreateShader(GL_FRAGMENT_SHADER);
+		// Combine ID and sources.
 		glShaderSource(vertID, vert);
 		glShaderSource(fragID, frag);
 		
+		// Compile the vertex shader.
 		glCompileShader(vertID);
 		if (glGetShaderi(vertID, GL_COMPILE_STATUS) == GL_FALSE) {
 			System.err.println("Failed to compile vertex shader!");
@@ -40,6 +53,7 @@ public class ShaderUtils {
 			return -1;
 		}
 		
+		// Compile the fragment shader.
 		glCompileShader(fragID);
 		if (glGetShaderi(fragID, GL_COMPILE_STATUS) == GL_FALSE) {
 			System.err.println("Failed to compile fragment shader!");
@@ -47,13 +61,13 @@ public class ShaderUtils {
 			return -1;
 		}
 		
+		// Link the source to the program.
 		glAttachShader(program, vertID);
 		glAttachShader(program, fragID);
 		glLinkProgram(program);
 		glValidateProgram(program);
 		
 		// Delete the shaders which are now part of the program.
-		
 		glDeleteShader(vertID);
 		glDeleteShader(fragID);
 		
